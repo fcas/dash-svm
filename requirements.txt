@@ -7,3 +7,7 @@ dash-html-components==0.10.1
 dash-core-components==0.22.1
 
 # Additional
+scikit-learn==0.19.1
+colorlover=0.2.1
+numpy==1.14.3
+pandas==0.20.3
