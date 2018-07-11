@@ -66,3 +66,13 @@ def NamedDropdown(name, **kwargs):
             dcc.Dropdown(**kwargs)
         ]
     )
+
+
+def NamedRadioItems(name, **kwargs):
+    return html.Div(
+        style={'padding': '20px 10px 25px 4px'},
+        children=[
+            html.P(children=f'{name}:'),
+            dcc.RadioItems(**kwargs)
+        ]
+    )

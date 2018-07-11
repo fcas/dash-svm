@@ -75,7 +75,7 @@ app.layout = html.Div(children=[
         # Change App Name here
         html.Div(className='container scalable', children=[
             # Change App Name here
-            html.H2('App Name'),
+            html.H2('Support Vector Machine (SVM) Explorer'),
 
             html.Img(
                 src="https://s3-us-west-1.amazonaws.com/plotly-tutorials/logo/new-branding/dash-logo-by-plotly-stripe-inverted.png"
@@ -85,7 +85,7 @@ app.layout = html.Div(children=[
 
     html.Div(id='body', className='container scalable', children=[
         html.Div(className='row', children=[
-            html.Div(className='six columns', children=[
+            html.Div(className='four columns', children=[
                 drc.Card([
                     drc.NamedDropdown(
                         name='Select Dataset',
@@ -105,7 +105,7 @@ app.layout = html.Div(children=[
                         id='slider-dataset-noise-level',
                         min=0,
                         max=1,
-                        marks={i / 10: str(i / 10) for i in range(0, 11)},
+                        marks={i / 10: str(i / 10) for i in range(0, 11, 2)},
                         step=0.1,
                         value=0.2,
                     ),
@@ -120,10 +120,28 @@ app.layout = html.Div(children=[
                              'value': 'rbf'},
                             {'label': 'Linear', 'value': 'linear'},
                             {'label': 'Polynomial', 'value': 'poly'},
+                            {'label': 'Sigmoid', 'value': 'sigmoid'}
                         ],
                         value='rbf',
                         clearable=False,
                         searchable=False
+                    ),
+
+                    drc.NamedSlider(
+                        name='Cost (C)',
+                        id='slider-svm-parameter-C-power',
+                        min=-3,
+                        max=1,
+                        value=0,
+                        marks={i: '{}'.format(10 ** i) for i in range(-3, 2)}
+                    ),
+
+                    drc.FormattedSlider(
+                        style={'padding': '5px 10px 25px'},
+                        id='slider-svm-parameter-C-coef',
+                        min=1,
+                        max=9,
+                        value=1
                     ),
 
                     drc.NamedSlider(
@@ -151,12 +169,26 @@ app.layout = html.Div(children=[
                         min=1,
                         max=9,
                         value=5
+                    ),
+
+                    drc.NamedRadioItems(
+                        name='Shrinking',
+                        id='radio-svm-parameter-shrinking',
+                        labelStyle={
+                            'margin-right': '7px',
+                            'display': 'inline-block'
+                        },
+                        options=[
+                            {'label': ' Enabled', 'value': True},
+                            {'label': ' Disabled', 'value': False},
+                        ],
+                        value=True,
                     )
                 ])
             ]),
 
             html.Div(className='six columns', children=[
-                dcc.Graph(id='graph-sklearn-svm', style={'height': '80vh'})
+                dcc.Graph(id='graph-sklearn-svm', style={'height': '98vh'})
             ])
         ])
     ])
@@ -170,14 +202,32 @@ def update_slider_svm_parameter_gamma_coef(power):
     return {i: str(round(i * scale, 8)) for i in range(1, 10)}
 
 
+@app.callback(Output('slider-svm-parameter-C-coef', 'marks'),
+              [Input('slider-svm-parameter-C-power', 'value')])
+def update_slider_svm_parameter_C_coef(power):
+    scale = 10 ** power
+    return {i: str(round(i * scale, 8)) for i in range(1, 10)}
+
+
 @app.callback(Output('graph-sklearn-svm', 'figure'),
               [Input('dropdown-svm-parameter-kernel', 'value'),
                Input('slider-svm-parameter-degree', 'value'),
+               Input('slider-svm-parameter-C-coef', 'value'),
+               Input('slider-svm-parameter-C-power', 'value'),
                Input('slider-svm-parameter-gamma-coef', 'value'),
                Input('slider-svm-parameter-gamma-power', 'value'),
                Input('dropdown-select-dataset', 'value'),
-               Input('slider-dataset-noise-level', 'value')])
-def update_svm_graph(kernel, degree, gamma_coef, gamma_power, dataset, noise):
+               Input('slider-dataset-noise-level', 'value'),
+               Input('radio-svm-parameter-shrinking', 'value')])
+def update_svm_graph(kernel,
+                     degree,
+                     C_coef,
+                     C_power,
+                     gamma_coef,
+                     gamma_power,
+                     dataset,
+                     noise,
+                     shrinking):
     h = .02  # step size in the mesh
 
     # Data Pre-processing
@@ -191,16 +241,22 @@ def update_svm_graph(kernel, degree, gamma_coef, gamma_power, dataset, noise):
     xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
                          np.arange(y_min, y_max, h))
 
+    C = C_coef * 10 ** C_power
     gamma = gamma_coef * 10 ** gamma_power
 
+    # Train SVM
+    t_start = time.time()
     clf = SVC(
+        C=C,
         kernel=kernel,
         degree=degree,
-        gamma=gamma
+        gamma=gamma,
+        shrinking=shrinking
     )
     clf.fit(X_train, y_train)
     train_score = clf.score(X_train, y_train)
     test_score = clf.score(X_test, y_test)
+    print(f"SVM took {time.time() - t_start:.3f} seconds to train.")
 
     # Plot the decision boundary. For that, we will assign a color to each
     # point in the mesh [x_min, x_max]x[y_min, y_max].
@@ -216,14 +272,13 @@ def update_svm_graph(kernel, degree, gamma_coef, gamma_power, dataset, noise):
     cscale = list(map(list, colorscale_zip))
 
     # Create the plot
-    Z = Z.reshape(xx.shape)
-
+    # Plot the prediction contour of the SVM
     trace0 = go.Contour(
         x=np.arange(xx.min(), xx.max(), h),
         y=np.arange(yy.min(), yy.max(), h),
-        z=Z,
+        z=Z.reshape(xx.shape),
         hoverinfo='none',
-        showscale=True,
+        showscale=False,
         contours=dict(
             showlines=False
         ),
@@ -236,6 +291,7 @@ def update_svm_graph(kernel, degree, gamma_coef, gamma_power, dataset, noise):
         mode='markers',
         name=f'Training Data (accuracy={train_score:.3f})',
         marker=dict(
+            size=8,
             color=y_train,
             colorscale=bright_cscale,
             line=dict(
@@ -250,13 +306,31 @@ def update_svm_graph(kernel, degree, gamma_coef, gamma_power, dataset, noise):
         mode='markers',
         name=f'Test Data (accuracy={test_score:.3f})',
         marker=dict(
+            size=8,
+            symbol='square',
             color=y_test,
             colorscale=bright_cscale,
             line=dict(
                 width=1
             ),
-            opacity=0.6
         )
+    )
+
+    # Plot the threshold
+    threshold = 0  # TODO: Let user control threshold
+    Z_bool = Z > threshold
+    Z_thresh = Z_bool.reshape(xx.shape).astype(int)
+
+    trace3 = go.Contour(
+        x=np.arange(xx.min(), xx.max(), h),
+        y=np.arange(yy.min(), yy.max(), h),
+        z=Z_thresh,
+        showscale=False,
+        hoverinfo='none',
+        contours=dict(
+            coloring='lines',
+        ),
+        colorscale=[[0, '#222222'], [1, '#222222']]
     )
 
     layout = go.Layout(
@@ -278,7 +352,7 @@ def update_svm_graph(kernel, degree, gamma_coef, gamma_power, dataset, noise):
         margin=dict(l=0, r=0, t=0, b=0)
     )
 
-    data = [trace0, trace1, trace2]
+    data = [trace0, trace1, trace2, trace3]
     figure = go.Figure(data=data, layout=layout)
 
     return figure
@@ -291,7 +365,7 @@ external_css = [
     "https://fonts.googleapis.com/css?family=Open+Sans|Roboto",
     "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
     # Base Stylesheet, replace this with your own base-styles.css using Rawgit
-    "https://cdn.rawgit.com/xhlulu/9a6e89f418ee40d02b637a429a876aa9/raw/base-styles.css",
+    "https://rawgit.com/xhlulu/9a6e89f418ee40d02b637a429a876aa9/raw/f3ea10d53e33ece67eb681025cedc83870c9938d/base-styles.css",
     # Custom Stylesheet, replace this with your own custom-styles.css using Rawgit
     "https://cdn.rawgit.com/xhlulu/638e683e245ea751bca62fd427e385ab/raw/fab9c525a4de5b2eea2a2b292943d455ade44edd/custom-styles.css"
 ]
