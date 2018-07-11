@@ -67,38 +67,78 @@ app.layout = html.Div(children=[
     html.Div(id='body', className='container scalable', children=[
         html.Div(className='row', children=[
             html.Div(className='six columns', children=drc.Card([
-                    drc.NamedDropdown(
-                        name='Kernel',
-                        id='dropdown-svm-parameter-kernel',
-                        options=[
-                            {'label': 'Radial basis function (RBF)', 'value': 'rbf'},
-                            {'label': 'Linear', 'value': 'linear'},
-                            {'label': 'Polynomial', 'value': 'poly'},
-                        ],
-                        value='rbf',
-                        clearable=False,
-                        searchable=False
+                drc.NamedDropdown(
+                    name='Kernel',
+                    id='dropdown-svm-parameter-kernel',
+                    options=[
+                        {'label': 'Radial basis function (RBF)', 'value': 'rbf'},
+                        {'label': 'Linear', 'value': 'linear'},
+                        {'label': 'Polynomial', 'value': 'poly'},
+                    ],
+                    value='rbf',
+                    clearable=False,
+                    searchable=False
+                ),
+
+                drc.NamedSlider(
+                    name='Degree',
+                    id='slider-svm-parameter-degree',
+                    min=2,
+                    max=10,
+                    marks={i: i for i in range(2, 11, 2)},
+                    step=1,
+                    value=3,
+                ),
+
+                drc.NamedSlider(
+                    name='Gamma',
+                    id='slider-svm-parameter-gamma-power',
+                    min=-3,
+                    max=1,
+                    value=-1,
+                    marks={i: '{}'.format(10 ** i) for i in range(-3, 2)}
+                ),
+
+                html.Div(
+                    id='div-svm-parameter-gamma',
+                    style={'margin': '30px 10px'},
+                    children=dcc.Slider(
+                        id='slider-svm-parameter-gamma-coef',
+                        value=5
                     )
+                ),
             ])),
 
             html.Div(className='six columns', children=[
                 dcc.Graph(id='graph-sklearn-svm', style={'height': '80vh'})
-            ]),
-
-
+            ])
         ])
-
-
     ])
 ])
 
 
+@app.callback(Output('div-svm-parameter-gamma', 'children'),
+              [Input('slider-svm-parameter-gamma-power', 'value')])
+def update_slider_svm_parameter_gamma(value):
+    scale = 10 ** value
+    return dcc.Slider(
+        id='slider-svm-parameter-gamma-coef',
+        min=1,
+        max=9,
+        value=5,
+        marks={i: str(round(i * scale, 8)) for i in range(1, 10)}
+    )
+
+
 @app.callback(Output('graph-sklearn-svm', 'figure'),
-              [Input('dropdown-svm-parameter-kernel', 'value')])
-def update_svm_figure(kernel):
+              [Input('dropdown-svm-parameter-kernel', 'value'),
+               Input('slider-svm-parameter-degree', 'value'),
+               Input('slider-svm-parameter-gamma-coef', 'value'),
+               Input('slider-svm-parameter-gamma-power', 'value')])
+def update_svm_graph(kernel, degree, gamma_coef, gamma_power):
     h = .02  # step size in the mesh
 
-    # preprocess dataset, split into training and test part
+    # Data Pre-processing
     X, y = datasets[0]
     X = StandardScaler().fit_transform(X)
     X_train, X_test, y_train, y_test = \
@@ -109,11 +149,17 @@ def update_svm_figure(kernel):
     xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
                          np.arange(y_min, y_max, h))
 
-    t_start = time.time()
-    clf = SVC(kernel=kernel)
+    gamma = gamma_coef * 10 ** gamma_power
+
+    clf = SVC(
+        kernel=kernel,
+        degree=degree,
+        gamma=gamma
+    )
     clf.fit(X_train, y_train)
-    score = clf.score(X_test, y_test)
-    print(f'SVC computed in {time.time() - t_start:.3f} seconds.')
+    train_score = clf.score(X_train, y_train)
+    test_score = clf.score(X_test, y_test)
+
 
     # Plot the decision boundary. For that, we will assign a color to each
     # point in the mesh [x_min, x_max]x[y_min, y_max].
@@ -124,7 +170,6 @@ def update_svm_figure(kernel):
 
     # Colorscale
     bright_cscale = [[0, '#FF0000'], [1, '#0000FF']]
-
     colorscale_zip = zip(np.arange(0, 1.01, 1 / 8),
                          cl.scales['9']['div']['RdBu'])
     cscale = list(map(list, colorscale_zip))
@@ -133,8 +178,8 @@ def update_svm_figure(kernel):
     Z = Z.reshape(xx.shape)
 
     trace0 = go.Contour(
-        x=np.arange(xx.min(), xx.max(), 0.02),
-        y=np.arange(yy.min(), yy.max(), 0.02),
+        x=np.arange(xx.min(), xx.max(), h),
+        y=np.arange(yy.min(), yy.max(), h),
         z=Z,
         hoverinfo='none',
         showscale=False,
@@ -148,7 +193,7 @@ def update_svm_figure(kernel):
         x=X_train[:, 0],
         y=X_train[:, 1],
         mode='markers',
-        name='Training Data',
+        name=f'Training Data (accuracy = {train_score:.3f})',
         marker=dict(
             color=y_train,
             colorscale=bright_cscale,
@@ -162,7 +207,7 @@ def update_svm_figure(kernel):
         x=X_test[:, 0],
         y=X_test[:, 1],
         mode='markers',
-        name='Test Data',
+        name=f'Test Data (accuracy = {test_score:.3f})',
         marker=dict(
             color=y_test,
             colorscale=bright_cscale,

@@ -34,9 +34,16 @@ def Card(children, **kwargs):
     )
 
 
-def NamedSlider(name, **kwargs):
+def FormattedSlider(**kwargs):
     return html.Div(
-        style={'margin': '25px 27px 35px 4px'},
+        style=kwargs.get('style', {}),
+        children=dcc.Slider(**_omit(['style'], kwargs))
+    )
+
+
+def NamedSlider(name, **kwargs):
+    return html.Section(
+        style={'margin': '25px 10px 35px 4px'},
         children=[
             html.P(f'{name}:'),
             html.Div(
@@ -44,33 +51,6 @@ def NamedSlider(name, **kwargs):
                 children=dcc.Slider(**kwargs)
             )
         ]
-    )
-
-
-def NamedInlineRadioItems(name, short, options, val, **kwargs):
-    return html.Div(
-        id=f'div-{short}',
-        style=_merge({
-            'display': 'block'
-        }, kwargs.get('style', {})),
-        children=[
-            f'{name}:',
-            dcc.RadioItems(
-                id=f'radio-{short}',
-                options=options,
-                value=val,
-                labelStyle={
-                    'display': 'inline-block',
-                    'margin-right': '7px',
-                    'font-weight': 300
-                },
-                style={
-                    'display': 'inline-block',
-                    'margin-left': '7px'
-                }
-            )
-        ],
-        **_omit(['style'], kwargs)
     )
 
 
