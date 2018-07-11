@@ -15,12 +15,6 @@
 - Media Queries
 */
 
-/* PLotly.js
-–––––––––––––––––––––––––––––––––––––––––––––––––– */
-/* plotly.js's modebar's z-index is outta the roof by default - lower it down */
-.js-plotly-plot .plotly .modebar {
-    z-index: 0 important!;
-}
 
 /* Grid
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
@@ -50,23 +44,23 @@
     width: 80%; }
   .column,
   .columns {
-    margin-left: 4%; }
+    margin-left: 0.5%; }
   .column:first-child,
   .columns:first-child {
     margin-left: 0; }
 
   .one.column,
-  .one.columns                    { width: 4.66666666667%; }
-  .two.columns                    { width: 13.3333333333%; }
+  .one.columns                    { width: 8%;             }
+  .two.columns                    { width: 16.25%;         }
   .three.columns                  { width: 22%;            }
-  .four.columns                   { width: 30.6666666667%; }
+  .four.columns                   { width: 33%;            }
   .five.columns                   { width: 39.3333333333%; }
-  .six.columns                    { width: 48%;            }
+  .six.columns                    { width: 49.75%;          }
   .seven.columns                  { width: 56.6666666667%; }
-  .eight.columns                  { width: 65.3333333333%; }
+  .eight.columns                  { width: 66.5%;          }
   .nine.columns                   { width: 74.0%;          }
   .ten.columns                    { width: 82.6666666667%; }
-  .eleven.columns                 { width: 91.3333333333%; }
+  .eleven.columns                 { width: 91.5%; }
   .twelve.columns                 { width: 100%; margin-left: 0; }
 
   .one-third.column               { width: 30.6666666667%; }
@@ -155,9 +149,7 @@ blockquote {
 /* Links
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 a {
-  color: #1EAEDB;
-  cursor: pointer;
-  text-decoration: underline;}
+  color: #1EAEDB; }
 a:hover {
   color: #0FA0CE; }
 
@@ -224,7 +216,6 @@ input[type="button"].button-primary:focus {
 
 /* Forms
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
-input,
 input[type="email"],
 input[type="number"],
 input[type="search"],
@@ -244,7 +235,6 @@ select {
   font-family: inherit;
   font-size: inherit; /*https://stackoverflow.com/questions/6080413/why-doesnt-input-inherit-the-font-from-body*/}
 /* Removes awkward default styles on some inputs for iOS */
-input,
 input[type="email"],
 input[type="number"],
 input[type="search"],
@@ -260,7 +250,6 @@ textarea {
   min-height: 65px;
   padding-top: 6px;
   padding-bottom: 6px; }
-input:focus,
 input[type="email"]:focus,
 input[type="number"]:focus,
 input[type="search"]:focus,
