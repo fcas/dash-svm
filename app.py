@@ -1,3 +1,9 @@
+"""
+This app's data and plots are heavily inspired from the scikit-learn Classifier
+comparison tutorial. Part of the app's code is directly taken from it. You can
+find it here:
+http://scikit-learn.org/stable/auto_examples/classification/plot_classifier_comparison.html
+"""
 import os
 import time
 
@@ -11,6 +17,7 @@ import numpy as np
 from dash.dependencies import Input, Output, State
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+from sklearn import datasets
 from sklearn.datasets import make_moons, make_circles, make_classification
 from sklearn.neural_network import MLPClassifier
 from sklearn.neighbors import KNeighborsClassifier
@@ -34,21 +41,33 @@ if 'DYNO' in os.environ:
     })
 
 
-def get_linearly_separable():
-    X, y = make_classification(n_features=2, n_redundant=0, n_informative=2,
-                               random_state=1, n_clusters_per_class=1)
-    rng = np.random.RandomState(2)
-    X += 2 * rng.uniform(size=X.shape)
-    linearly_separable = (X, y)
+def generate_data(dataset, noise):
+    if dataset == 'moons':
+        return datasets.make_moons(noise=noise, random_state=0)
 
-    return linearly_separable
+    elif dataset == 'circles':
+        return datasets.make_circles(noise=noise, factor=0.5, random_state=1)
 
+    elif dataset == 'linear':
+        X, y = datasets.make_classification(
+            n_features=2,
+            n_redundant=0,
+            n_informative=2,
+            random_state=2,
+            n_clusters_per_class=1
+        )
 
-datasets = [
-    make_moons(noise=0.3, random_state=0),
-    make_circles(noise=0.2, factor=0.5, random_state=1),
-    get_linearly_separable
-]
+        rng = np.random.RandomState(2)
+        X += noise * rng.uniform(size=X.shape)
+        linearly_separable = (X, y)
+
+        return linearly_separable
+
+    else:
+        raise ValueError(
+            'Data type incorrectly specified. Please choose an existing '
+            'dataset.')
+
 
 app.layout = html.Div(children=[
     # .container class is fixed, .container.scalable is scalable
@@ -66,48 +85,75 @@ app.layout = html.Div(children=[
 
     html.Div(id='body', className='container scalable', children=[
         html.Div(className='row', children=[
-            html.Div(className='six columns', children=drc.Card([
-                drc.NamedDropdown(
-                    name='Kernel',
-                    id='dropdown-svm-parameter-kernel',
-                    options=[
-                        {'label': 'Radial basis function (RBF)', 'value': 'rbf'},
-                        {'label': 'Linear', 'value': 'linear'},
-                        {'label': 'Polynomial', 'value': 'poly'},
-                    ],
-                    value='rbf',
-                    clearable=False,
-                    searchable=False
-                ),
+            html.Div(className='six columns', children=[
+                drc.Card([
+                    drc.NamedDropdown(
+                        name='Select Dataset',
+                        id='dropdown-select-dataset',
+                        options=[
+                            {'label': 'Moons', 'value': 'moons'},
+                            {'label': 'Linearly Separable', 'value': 'linear'},
+                            {'label': 'Circles', 'value': 'circles'}
+                        ],
+                        clearable=False,
+                        searchable=False,
+                        value='moons'
+                    ),
 
-                drc.NamedSlider(
-                    name='Degree',
-                    id='slider-svm-parameter-degree',
-                    min=2,
-                    max=10,
-                    marks={i: i for i in range(2, 11, 2)},
-                    step=1,
-                    value=3,
-                ),
+                    drc.NamedSlider(
+                        name='Noise Level',
+                        id='slider-dataset-noise-level',
+                        min=0,
+                        max=1,
+                        marks={i / 10: str(i / 10) for i in range(0, 11)},
+                        step=0.1,
+                        value=0.2,
+                    ),
+                ]),
 
-                drc.NamedSlider(
-                    name='Gamma',
-                    id='slider-svm-parameter-gamma-power',
-                    min=-3,
-                    max=1,
-                    value=-1,
-                    marks={i: '{}'.format(10 ** i) for i in range(-3, 2)}
-                ),
+                drc.Card([
+                    drc.NamedDropdown(
+                        name='Kernel',
+                        id='dropdown-svm-parameter-kernel',
+                        options=[
+                            {'label': 'Radial basis function (RBF)',
+                             'value': 'rbf'},
+                            {'label': 'Linear', 'value': 'linear'},
+                            {'label': 'Polynomial', 'value': 'poly'},
+                        ],
+                        value='rbf',
+                        clearable=False,
+                        searchable=False
+                    ),
 
-                html.Div(
-                    id='div-svm-parameter-gamma',
-                    style={'margin': '30px 10px'},
-                    children=dcc.Slider(
+                    drc.NamedSlider(
+                        name='Degree',
+                        id='slider-svm-parameter-degree',
+                        min=2,
+                        max=10,
+                        marks={i: i for i in range(2, 11, 2)},
+                        step=1,
+                        value=3,
+                    ),
+
+                    drc.NamedSlider(
+                        name='Gamma',
+                        id='slider-svm-parameter-gamma-power',
+                        min=-3,
+                        max=1,
+                        value=-1,
+                        marks={i: '{}'.format(10 ** i) for i in range(-3, 2)}
+                    ),
+
+                    drc.FormattedSlider(
+                        style={'padding': '5px 10px 25px'},
                         id='slider-svm-parameter-gamma-coef',
+                        min=1,
+                        max=9,
                         value=5
                     )
-                ),
-            ])),
+                ])
+            ]),
 
             html.Div(className='six columns', children=[
                 dcc.Graph(id='graph-sklearn-svm', style={'height': '80vh'})
@@ -117,29 +163,25 @@ app.layout = html.Div(children=[
 ])
 
 
-@app.callback(Output('div-svm-parameter-gamma', 'children'),
+@app.callback(Output('slider-svm-parameter-gamma-coef', 'marks'),
               [Input('slider-svm-parameter-gamma-power', 'value')])
-def update_slider_svm_parameter_gamma(value):
-    scale = 10 ** value
-    return dcc.Slider(
-        id='slider-svm-parameter-gamma-coef',
-        min=1,
-        max=9,
-        value=5,
-        marks={i: str(round(i * scale, 8)) for i in range(1, 10)}
-    )
+def update_slider_svm_parameter_gamma_coef(power):
+    scale = 10 ** power
+    return {i: str(round(i * scale, 8)) for i in range(1, 10)}
 
 
 @app.callback(Output('graph-sklearn-svm', 'figure'),
               [Input('dropdown-svm-parameter-kernel', 'value'),
                Input('slider-svm-parameter-degree', 'value'),
                Input('slider-svm-parameter-gamma-coef', 'value'),
-               Input('slider-svm-parameter-gamma-power', 'value')])
-def update_svm_graph(kernel, degree, gamma_coef, gamma_power):
+               Input('slider-svm-parameter-gamma-power', 'value'),
+               Input('dropdown-select-dataset', 'value'),
+               Input('slider-dataset-noise-level', 'value')])
+def update_svm_graph(kernel, degree, gamma_coef, gamma_power, dataset, noise):
     h = .02  # step size in the mesh
 
     # Data Pre-processing
-    X, y = datasets[0]
+    X, y = generate_data(dataset=dataset, noise=noise)
     X = StandardScaler().fit_transform(X)
     X_train, X_test, y_train, y_test = \
         train_test_split(X, y, test_size=.4, random_state=42)
@@ -159,7 +201,6 @@ def update_svm_graph(kernel, degree, gamma_coef, gamma_power):
     clf.fit(X_train, y_train)
     train_score = clf.score(X_train, y_train)
     test_score = clf.score(X_test, y_test)
-
 
     # Plot the decision boundary. For that, we will assign a color to each
     # point in the mesh [x_min, x_max]x[y_min, y_max].
@@ -182,7 +223,7 @@ def update_svm_graph(kernel, degree, gamma_coef, gamma_power):
         y=np.arange(yy.min(), yy.max(), h),
         z=Z,
         hoverinfo='none',
-        showscale=False,
+        showscale=True,
         contours=dict(
             showlines=False
         ),
@@ -193,7 +234,7 @@ def update_svm_graph(kernel, degree, gamma_coef, gamma_power):
         x=X_train[:, 0],
         y=X_train[:, 1],
         mode='markers',
-        name=f'Training Data (accuracy = {train_score:.3f})',
+        name=f'Training Data (accuracy={train_score:.3f})',
         marker=dict(
             color=y_train,
             colorscale=bright_cscale,
@@ -207,7 +248,7 @@ def update_svm_graph(kernel, degree, gamma_coef, gamma_power):
         x=X_test[:, 0],
         y=X_test[:, 1],
         mode='markers',
-        name=f'Test Data (accuracy = {test_score:.3f})',
+        name=f'Test Data (accuracy={test_score:.3f})',
         marker=dict(
             color=y_test,
             colorscale=bright_cscale,
@@ -234,14 +275,13 @@ def update_svm_graph(kernel, degree, gamma_coef, gamma_power):
             zeroline=False,
         ),
         legend=dict(x=0, y=-0.01, orientation="h"),
-        margin=dict(l=0,r=0, t=0, b=0)
+        margin=dict(l=0, r=0, t=0, b=0)
     )
 
     data = [trace0, trace1, trace2]
     figure = go.Figure(data=data, layout=layout)
 
     return figure
-
 
 
 external_css = [

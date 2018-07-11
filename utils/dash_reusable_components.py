@@ -42,8 +42,8 @@ def FormattedSlider(**kwargs):
 
 
 def NamedSlider(name, **kwargs):
-    return html.Section(
-        style={'margin': '25px 10px 35px 4px'},
+    return html.Div(
+        style={'padding': '20px 10px 25px 4px'},
         children=[
             html.P(f'{name}:'),
             html.Div(
