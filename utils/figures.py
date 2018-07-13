@@ -173,12 +173,16 @@ def serve_pie_confusion_matrix(model,
     matrix = metrics.confusion_matrix(y_true=y_test, y_pred=y_pred_test)
     tn, fp, fn, tp = matrix.ravel()
 
-    values = [tp, fp, fn, tn]
+    values = [tp, fn, fp, tn]
     label_text = ["True Positive",
-                  "False Positive",
                   "False Negative",
+                  "False Positive",
                   "True Negative"]
-    labels = ["TP", "FP", "FN", "TN"]
+    labels = ["TP", "FN", "FP", "TN"]
+    colors = ['rgb(178,24,43)',
+              'rgb(244,165,130)',
+              'rgb(146,197,222)',
+              'rgb(33,102,172)']
 
     trace0 = go.Pie(
         labels=label_text,
@@ -187,6 +191,12 @@ def serve_pie_confusion_matrix(model,
         textinfo='text+value',
         text=labels,
         sort=False,
+        marker=dict(
+            colors=colors
+        ),
+        textfont=dict(
+            color='#e0e0e0'
+        )
     )
 
     layout = go.Layout(
