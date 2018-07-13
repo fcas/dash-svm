@@ -8,6 +8,7 @@ The Confusion Matrix Pie Chart format was inspired by Nicolas's Dash ROC app.
 """
 import os
 import time
+from textwrap import dedent
 
 import dash
 import dash_core_components as dcc
@@ -139,7 +140,9 @@ app.layout = html.Div(children=[
                             step=0.1,
                             value=0.2,
                         ),
+                    ]),
 
+                    drc.Card([
                         drc.NamedSlider(
                             name='Threshold',
                             id='slider-threshold',
@@ -230,7 +233,14 @@ app.layout = html.Div(children=[
                             ],
                             value=True,
                         ),
-                    ])
+                    ]),
+
+                    html.Div(
+                        dcc.Markdown(dedent("""
+                        [Click here](https://github.com/plotly/dash-svm) to visit the project repo.
+                        """)),
+                        style={'margin': '20px 0px', 'text-align': 'center'}
+                    ),
                 ]
             ),
         ])
