@@ -179,10 +179,9 @@ def serve_pie_confusion_matrix(model,
                   "False Positive",
                   "True Negative"]
     labels = ["TP", "FN", "FP", "TN"]
-    colors = ['rgb(178,24,43)',
-              'rgb(244,165,130)',
-              'rgb(146,197,222)',
-              'rgb(33,102,172)']
+    blue = cl.flipper()['seq']['9']['Blues']
+    red = cl.flipper()['seq']['9']['Reds']
+    colors = [blue[4], blue[1], red[1], red[4]]
 
     trace0 = go.Pie(
         labels=label_text,
@@ -193,9 +192,6 @@ def serve_pie_confusion_matrix(model,
         sort=False,
         marker=dict(
             colors=colors
-        ),
-        textfont=dict(
-            color='#e0e0e0'
         )
     )
 
