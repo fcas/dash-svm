@@ -355,6 +355,7 @@ def update_svm_graph(kernel,
         model=clf,
         X_test=X_test,
         y_test=y_test,
+        Z=Z,
         threshold=threshold
     )
 

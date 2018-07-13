@@ -164,8 +164,11 @@ def serve_roc_curve(model,
 def serve_pie_confusion_matrix(model,
                                X_test,
                                y_test,
+                               Z,
                                threshold):
-    y_pred_test = (model.decision_function(X_test) > threshold).astype(int)
+    # Compute threshold
+    scaled_threshold = threshold * (Z.max() - Z.min()) + Z.min()
+    y_pred_test = (model.decision_function(X_test) > scaled_threshold).astype(int)
 
     matrix = metrics.confusion_matrix(y_true=y_test, y_pred=y_pred_test)
     tn, fp, fn, tp = matrix.ravel()
