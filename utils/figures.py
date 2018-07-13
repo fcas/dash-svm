@@ -121,7 +121,7 @@ def serve_prediction_plot(model,
             zeroline=False,
         ),
         legend=dict(x=0, y=-0.01, orientation="h"),
-        margin=dict(l=0, r=0, t=0, b=0)
+        margin=dict(l=0, r=0, t=0, b=0),
     )
 
     data = [trace0, trace1, trace2, trace3]
@@ -142,7 +142,7 @@ def serve_roc_curve(model,
     trace0 = go.Scatter(
         x=fpr,
         y=tpr,
-        mode='line',
+        mode='lines',
         name='Test Data',
     )
 

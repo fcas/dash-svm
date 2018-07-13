@@ -345,7 +345,6 @@ def update_svm_graph(kernel,
         shrinking=shrinking
     )
     clf.fit(X_train, y_train)
-    print(f"SVM took {time.time() - t_start:.3f} seconds to train.")
 
     # Plot the decision boundary. For that, we will assign a color to each
     # point in the mesh [x_min, x_max]x[y_min, y_max].
@@ -353,6 +352,8 @@ def update_svm_graph(kernel,
         Z = clf.decision_function(np.c_[xx.ravel(), yy.ravel()])
     else:
         Z = clf.predict_proba(np.c_[xx.ravel(), yy.ravel()])[:, 1]
+
+    print(f"SVM took {time.time() - t_start:.3f} seconds to train and generate mesh.")
 
     prediction_figure = serve_prediction_plot(
         model=clf,
