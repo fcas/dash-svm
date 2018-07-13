@@ -78,10 +78,18 @@ app.layout = html.Div(children=[
         # Change App Name here
         html.Div(className='container scalable', children=[
             # Change App Name here
-            html.H2('Support Vector Machine (SVM) Explorer'),
+            html.H2(html.A(
+                'Support Vector Machine (SVM) Explorer',
+                href='https://github.com/plotly/dash-svm',
+                style={
+                    'text-decoration': 'none',
+                    'color': 'inherit'
+                }
+            )),
 
-            html.Img(
-                src="https://s3-us-west-1.amazonaws.com/plotly-tutorials/logo/new-branding/dash-logo-by-plotly-stripe-inverted.png"
+            html.A(
+                html.Img(src="https://s3-us-west-1.amazonaws.com/plotly-tutorials/logo/new-branding/dash-logo-by-plotly-stripe-inverted.png"),
+                href='https://plot.ly/products/dash/'
             )
         ]),
     ]),
