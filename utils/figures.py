@@ -13,7 +13,6 @@ def serve_prediction_plot(model,
                           xx,
                           yy,
                           mesh_step,
-                          colorscale_selected,
                           threshold):
     # Get train and test score from model
     y_pred_train = (model.decision_function(X_train) > threshold).astype(int)
@@ -29,14 +28,9 @@ def serve_prediction_plot(model,
     # Colorscale
     bright_cscale = [[0, '#FF0000'], [1, '#0000FF']]
 
-    if colorscale_selected == 'default':
-        cscale = [[0, 'rgb(178,24,43)'], [1, 'rgb(33,102,172)']]
-    elif colorscale_selected == 'Viridis':
-        cscale = "Viridis"
-    else:
-        colorscale_zip = zip(np.arange(0, 1.01, 1 / 8),
-                             cl.scales['9']['div'][colorscale_selected])
-        cscale = list(map(list, colorscale_zip))
+    colorscale_zip = zip(np.arange(0, 1.01, 1 / 8),
+                         cl.scales['9']['div']['RdBu'])
+    cscale = list(map(list, colorscale_zip))
 
     # Create the plot
     # Plot the prediction contour of the SVM
@@ -55,39 +49,8 @@ def serve_prediction_plot(model,
         opacity=0.9
     )
 
-    trace1 = go.Scatter(
-        x=X_train[:, 0],
-        y=X_train[:, 1],
-        mode='markers',
-        name=f'Training Data (accuracy={train_score:.3f})',
-        marker=dict(
-            size=10,
-            color=y_train,
-            colorscale=bright_cscale,
-            line=dict(
-                width=1
-            )
-        )
-    )
-
-    trace2 = go.Scatter(
-        x=X_test[:, 0],
-        y=X_test[:, 1],
-        mode='markers',
-        name=f'Test Data (accuracy={test_score:.3f})',
-        marker=dict(
-            size=10,
-            symbol='triangle-up',
-            color=y_test,
-            colorscale=bright_cscale,
-            line=dict(
-                width=1
-            ),
-        )
-    )
-
     # Plot the threshold
-    trace3 = go.Contour(
+    trace1 = go.Contour(
         x=np.arange(xx.min(), xx.max(), mesh_step),
         y=np.arange(yy.min(), yy.max(), mesh_step),
         z=Z.reshape(xx.shape),
@@ -105,10 +68,43 @@ def serve_prediction_plot(model,
         )
     )
 
+    # Plot Training Data
+    trace2 = go.Scatter(
+        x=X_train[:, 0],
+        y=X_train[:, 1],
+        mode='markers',
+        name=f'Training Data (accuracy={train_score:.3f})',
+        marker=dict(
+            size=10,
+            color=y_train,
+            colorscale=bright_cscale,
+            line=dict(
+                width=1
+            )
+        )
+    )
+
+    # Plot Test Data
+    trace3 = go.Scatter(
+        x=X_test[:, 0],
+        y=X_test[:, 1],
+        mode='markers',
+        name=f'Test Data (accuracy={test_score:.3f})',
+        marker=dict(
+            size=10,
+            symbol='triangle-up',
+            color=y_test,
+            colorscale=bright_cscale,
+            line=dict(
+                width=1
+            ),
+        )
+    )
+
     layout = go.Layout(
         xaxis=dict(
-            scaleanchor="y",
-            scaleratio=1,
+            # scaleanchor="y",
+            # scaleratio=1,
             ticks='',
             showticklabels=False,
             showgrid=False,
@@ -120,6 +116,7 @@ def serve_prediction_plot(model,
             showgrid=False,
             zeroline=False,
         ),
+        hovermode='closest',
         legend=dict(x=0, y=-0.01, orientation="h"),
         margin=dict(l=0, r=0, t=0, b=0),
     )
@@ -147,7 +144,7 @@ def serve_roc_curve(model,
     )
 
     layout = go.Layout(
-        title=f'ROC Curve of Test Data (AUC = {auc_score:.3f})',
+        title=f'ROC Curve (AUC = {auc_score:.3f})',
         xaxis=dict(
             title='False Positive Rate'
         ),
@@ -174,21 +171,28 @@ def serve_pie_confusion_matrix(model,
     tn, fp, fn, tp = matrix.ravel()
 
     values = [tp, fp, fn, tn]
-    labels = ["True Positive",
-              "False Positive",
-              "False Negative",
-              "True Negative"]
+    label_text = ["True Positive",
+                  "False Positive",
+                  "False Negative",
+                  "True Negative"]
+    labels = ["TP", "FP", "FN", "TN"]
+
     trace0 = go.Pie(
-        labels=labels,
+        labels=label_text,
         values=values,
-        hoverinfo='label+percent',
-        textinfo='label+value',
+        hoverinfo='label+value+percent',
+        textinfo='text+value',
+        text=labels,
         sort=False,
     )
 
     layout = go.Layout(
-        title=f'Confusion Matrix of Test Data',
-        margin=dict(l=20, r=20, t=45, b=20),
+        title=f'Confusion Matrix',
+        margin=dict(l=10, r=10, t=60, b=10),
+        legend=dict(
+            bgcolor='rgba(255,255,255,0)',
+            orientation='h'
+        )
     )
 
     data = [trace0]

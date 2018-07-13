@@ -3,35 +3,25 @@ This app's data and plots are heavily inspired from the scikit-learn Classifier
 comparison tutorial. Part of the app's code is directly taken from it. You can
 find it here:
 http://scikit-learn.org/stable/auto_examples/classification/plot_classifier_comparison.html
+
+The Confusion Matrix Pie Chart format was inspired by Nicolas's Dash ROC app.
 """
 import os
-import json
 import time
 
-import colorlover as cl
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-import plotly.graph_objs as go
-import pandas as pd
 import numpy as np
 from dash.dependencies import Input, Output, State
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn import datasets, metrics
-from sklearn.datasets import make_moons, make_circles, make_classification
-from sklearn.neural_network import MLPClassifier
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn import datasets
 from sklearn.svm import SVC
-from sklearn.gaussian_process import GaussianProcessClassifier
-from sklearn.gaussian_process.kernels import RBF
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
-from sklearn.naive_bayes import GaussianNB
-from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 
 import utils.dash_reusable_components as drc
-from utils.figures import serve_prediction_plot, serve_roc_curve, serve_pie_confusion_matrix
+from utils.figures import serve_prediction_plot, serve_roc_curve, \
+    serve_pie_confusion_matrix
 
 app = dash.Dash(__name__)
 server = app.server
@@ -162,7 +152,7 @@ app.layout = html.Div(children=[
                         html.Button(
                             'Reset Threshold',
                             id='button-zero-threshold'
-                        )
+                        ),
                     ]),
 
                     drc.Card([
@@ -240,25 +230,6 @@ app.layout = html.Div(children=[
                             ],
                             value=True,
                         ),
-
-                        drc.NamedRadioItems(
-                            name='Colorscale',
-                            id='radio-colorscale-selected',
-                            labelStyle={
-                                'margin-right': '7px',
-                            },
-                            options=[
-                                {'label': ' Default', 'value': 'default'},
-                                {'label': ' Viridis', 'value': 'Viridis'},
-                                {'label': ' Red to Blue',
-                                 'value': 'RdBu'},
-                                {'label': ' Red, Yellow, Blue',
-                                 'value': 'RdYlBu'},
-                                {'label': ' Spectral',
-                                 'value': 'Spectral'}
-                            ],
-                            value='RdBu',
-                        )
                     ])
                 ]
             ),
@@ -304,7 +275,6 @@ def reset_threshold_center(n_clicks, figure):
                Input('dropdown-select-dataset', 'value'),
                Input('slider-dataset-noise-level', 'value'),
                Input('radio-svm-parameter-shrinking', 'value'),
-               Input('radio-colorscale-selected', 'value'),
                Input('slider-threshold', 'value'),
                Input('slider-dataset-sample-size', 'value')])
 def update_svm_graph(kernel,
@@ -316,9 +286,9 @@ def update_svm_graph(kernel,
                      dataset,
                      noise,
                      shrinking,
-                     colorscale_selected,
                      threshold,
                      sample_size):
+    t_start = time.time()
     h = .02  # step size in the mesh
 
     # Data Pre-processing
@@ -336,7 +306,6 @@ def update_svm_graph(kernel,
     gamma = gamma_coef * 10 ** gamma_power
 
     # Train SVM
-    t_start = time.time()
     clf = SVC(
         C=C,
         kernel=kernel,
@@ -353,8 +322,6 @@ def update_svm_graph(kernel,
     else:
         Z = clf.predict_proba(np.c_[xx.ravel(), yy.ravel()])[:, 1]
 
-    print(f"SVM took {time.time() - t_start:.3f} seconds to train and generate mesh.")
-
     prediction_figure = serve_prediction_plot(
         model=clf,
         X_train=X_train,
@@ -365,7 +332,6 @@ def update_svm_graph(kernel,
         xx=xx,
         yy=yy,
         mesh_step=h,
-        colorscale_selected=colorscale_selected,
         threshold=threshold
     )
 
@@ -382,33 +348,47 @@ def update_svm_graph(kernel,
         threshold=threshold
     )
 
+    print(
+        f"Total Time Taken: {time.time() - t_start:.3f} sec")
+
     return [
         html.Div(
             className='three columns',
             style={
                 'min-width': '24.5%',
-                'height': 'calc(100vh - 85px)'
+                'height': 'calc(100vh - 90px)',
+                'margin-top': '5px',
+
+                # Remove possibility to select the text for better UX
+                'user-select': 'none',
+                '-moz-user-select': 'none',
+                '-webkit-user-select': 'none',
+                '-ms-user-select': 'none'
             },
             children=[
                 dcc.Graph(
                     id='graph-line-roc-curve',
-                    style={'height': '50%'},
+                    style={'height': '40%'},
                     figure=roc_figure
                 ),
 
                 dcc.Graph(
                     id='graph-pie-confusion-matrix',
                     figure=confusion_figure,
-                    style={'height': '50%'}
+                    style={'height': '60%'}
                 )
             ]),
 
-        html.Div(className='six columns', children=[
-            dcc.Graph(
-                id='graph-sklearn-svm',
-                figure=prediction_figure,
-                style={'height': 'calc(100vh - 85px)'})
-        ])
+        html.Div(
+            className='six columns',
+            style={'margin-top': '5px'},
+            children=[
+                dcc.Graph(
+                    id='graph-sklearn-svm',
+                    figure=prediction_figure,
+                    style={'height': 'calc(100vh - 90px)'}
+                )
+            ])
     ]
 
 
