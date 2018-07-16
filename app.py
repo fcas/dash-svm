@@ -245,13 +245,13 @@ app.layout = html.Div(children=[
 
                     html.Div(
                         dcc.Markdown(dedent("""
-                        [Click here](https://github.com/plotly/dash-svm) to visit the project repo.
+                        [Click here](https://github.com/plotly/dash-svm) to visit the project repo, and learn about how to use the app.
                         """)),
                         style={'margin': '20px 0px', 'text-align': 'center'}
                     ),
                 ]
             ),
-        ])
+        ]),
     ])
 ])
 
@@ -281,6 +281,25 @@ def reset_threshold_center(n_clicks, figure):
     else:
         value = 0.4959986285375595
     return value
+
+
+# Disable Sliders if kernel not in the given list
+@app.callback(Output('slider-svm-parameter-degree', 'disabled'),
+              [Input('dropdown-svm-parameter-kernel', 'value')])
+def disable_slider_param_degree(kernel):
+    return kernel != 'poly'
+
+
+@app.callback(Output('slider-svm-parameter-gamma-coef', 'disabled'),
+              [Input('dropdown-svm-parameter-kernel', 'value')])
+def disable_slider_param_gamma_coef(kernel):
+    return kernel not in ['rbf', 'poly', 'sigmoid']
+
+
+@app.callback(Output('slider-svm-parameter-gamma-power', 'disabled'),
+              [Input('dropdown-svm-parameter-kernel', 'value')])
+def disable_slider_param_gamma_power(kernel):
+    return kernel not in ['rbf', 'poly', 'sigmoid']
 
 
 @app.callback(Output('div-graphs', 'children'),

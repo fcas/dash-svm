@@ -1,8 +1,7 @@
+from textwrap import dedent
+
 import dash_core_components as dcc
 import dash_html_components as html
-import numpy as np
-
-import plotly.graph_objs as go
 
 
 # Display utility functions
@@ -75,4 +74,28 @@ def NamedRadioItems(name, **kwargs):
             html.P(children=f'{name}:'),
             dcc.RadioItems(**kwargs)
         ]
+    )
+
+
+# Non-generic
+def DemoDescription(filename, strip=False):
+    with open(filename, 'r') as file:
+        text = file.read()
+
+    if strip:
+        text = text.split('<Start Description>')[-1]
+        text = text.split('<End Description>')[0]
+
+    return html.Div(
+            className='row',
+            style={
+                'padding': '15px 30px 27px',
+                'margin': '45px auto 45px',
+                'width': '80%',
+                'max-width': '1024px',
+                'borderRadius': 5,
+                'border': 'thin lightgrey solid',
+                'font-family': 'Roboto, sans-serif'
+            },
+            children=dcc.Markdown(dedent(text))
     )
