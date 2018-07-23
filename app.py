@@ -439,7 +439,7 @@ external_css = [
     # Base Stylesheet, replace this with your own base-styles.css using Rawgit
     "https://rawgit.com/xhlulu/9a6e89f418ee40d02b637a429a876aa9/raw/f3ea10d53e33ece67eb681025cedc83870c9938d/base-styles.css",
     # Custom Stylesheet, replace this with your own custom-styles.css using Rawgit
-    "https://cdn.rawgit.com/plotly/dash-svm/904df608/custom-styles.css"
+    "https://cdn.rawgit.com/plotly/dash-svm/876998f1/custom-styles.css"
 ]
 
 for css in external_css:
