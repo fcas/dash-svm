@@ -55,7 +55,7 @@ An SVM is a popular Machine Learning model used in many different fields. You ca
 ## Built With
 * [Dash](https://dash.plot.ly/) - Main server and interactive components
 * [Plotly Python](https://plot.ly/python/) - Used to create the interactive plots
-* [Scikit-Learn](http://scikit-learn.org/stable/documentation.html) - Run the regression algorithms and generate datasets
+* [Scikit-Learn](http://scikit-learn.org/stable/documentation.html) - Run the classification algorithms and generate datasets
 
 ## Contributing
 
