@@ -50,8 +50,12 @@ This app is fully written in Dash + scikit-learn. All the components are used as
 In addition to creating models, scikit-learn is used to generate the datasets you see, as well as the data needed for the metrics plots.
 
 ### What is an SVM?
-
 An SVM is a popular Machine Learning model used in many different fields. You can find an [excellent guide to how to use SVMs here](https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf).
+
+## Built With
+* [Dash](https://dash.plot.ly/) - Main server and interactive components
+* [Plotly Python](https://plot.ly/python/) - Used to create the interactive plots
+* [Scikit-Learn](http://scikit-learn.org/stable/documentation.html) - Run the regression algorithms and generate datasets
 
 ## Contributing
 
