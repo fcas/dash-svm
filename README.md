@@ -6,8 +6,7 @@ Dash abstracts away all of the technologies and protocols required to build an i
 
 To learn more check out our [documentation](https://plot.ly/dash).
 
-You can find the latest [dev version of the app here](https://dash-svm-dev.herokuapp.com/),
-and the [official version here](https://dash-svm.herokuapp.com/).
+Try out the [demo app here](https://dash-svm.plot.ly/).
 
 <Start Description>
 
