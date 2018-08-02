@@ -26,12 +26,15 @@ from utils.figures import serve_prediction_plot, serve_roc_curve, \
 
 app = dash.Dash(__name__)
 server = app.server
+processes=1
 
 # Custom Script for Heroku
 if 'DYNO' in os.environ:
     app.scripts.append_script({
         'external_url': 'https://cdn.rawgit.com/chriddyp/ca0d8f02a1659981a0ea7f013a378bbd/raw/e79f3f789517deec58f41251f7dbb6bee72c44ab/plotly_ga.js'
     })
+
+    processes=4
 
 
 def generate_data(n_samples, dataset, noise):
@@ -277,7 +280,6 @@ def reset_threshold_center(n_clicks, figure):
     if n_clicks:
         Z = np.array(figure['data'][0]['z'])
         value = - Z.min() / (Z.max() - Z.min())
-        print(value)
     else:
         value = 0.4959986285375595
     return value
@@ -447,4 +449,4 @@ for css in external_css:
 
 # Running the server
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True, processes=processes)
