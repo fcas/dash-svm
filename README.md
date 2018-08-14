@@ -64,6 +64,7 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 ## Authors
 
 * **Xing Han Lu** - *Initial Work* - [@xhlulu](https://github.com/xhlulu)
+* **Matthew Chan** - *Code Review* - [@matthewchan15](https://github.com/matthewchan15)
 
 See also the list of [contributors](https://github.com/plotly/dash-svm/contributors) who participated in this project.
 
@@ -72,6 +73,8 @@ See also the list of [contributors](https://github.com/plotly/dash-svm/contribut
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
 ## Acknowledgments
+The heatmap configuration is heavily inspired from the [scikit-learn Classification Comparison Tutorial](http://scikit-learn.org/stable/auto_examples/classification/plot_classifier_comparison.html). Please go take a look!
 
+The idea of the [ROC Curve, the Matrix Pie Chart and Thresholding](https://github.com/nicolaskruchten/dash-roc) came from @nickruchten. The app would not have been as complete without his insightful advice.
 
 ## Screenshots
