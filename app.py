@@ -33,6 +33,8 @@ if 'DYNO' in os.environ:
         'external_url': 'https://cdn.rawgit.com/chriddyp/ca0d8f02a1659981a0ea7f013a378bbd/raw/e79f3f789517deec58f41251f7dbb6bee72c44ab/plotly_ga.js'
     })
 
+    processes = 4
+
 
 def generate_data(n_samples, dataset, noise):
     if dataset == 'moons':
@@ -277,7 +279,6 @@ def reset_threshold_center(n_clicks, figure):
     if n_clicks:
         Z = np.array(figure['data'][0]['z'])
         value = - Z.min() / (Z.max() - Z.min())
-        print(value)
     else:
         value = 0.4959986285375595
     return value
@@ -326,7 +327,7 @@ def update_svm_graph(kernel,
                      threshold,
                      sample_size):
     t_start = time.time()
-    h = .02  # step size in the mesh
+    h = .3  # step size in the mesh
 
     # Data Pre-processing
     X, y = generate_data(n_samples=sample_size, dataset=dataset, noise=noise)
@@ -334,8 +335,10 @@ def update_svm_graph(kernel,
     X_train, X_test, y_train, y_test = \
         train_test_split(X, y, test_size=.4, random_state=42)
 
-    x_min, x_max = X[:, 0].min() - .5, X[:, 0].max() + .5
-    y_min, y_max = X[:, 1].min() - .5, X[:, 1].max() + .5
+    x_min = X[:, 0].min() - .5
+    x_max = X[:, 0].max() + .5
+    y_min = X[:, 1].min() - .5
+    y_max = X[:, 1].max() + .5
     xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
                          np.arange(y_min, y_max, h))
 
