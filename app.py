@@ -26,7 +26,6 @@ from utils.figures import serve_prediction_plot, serve_roc_curve, \
 
 app = dash.Dash(__name__)
 server = app.server
-processes=1
 
 # Custom Script for Heroku
 if 'DYNO' in os.environ:
@@ -34,7 +33,7 @@ if 'DYNO' in os.environ:
         'external_url': 'https://cdn.rawgit.com/chriddyp/ca0d8f02a1659981a0ea7f013a378bbd/raw/e79f3f789517deec58f41251f7dbb6bee72c44ab/plotly_ga.js'
     })
 
-    processes=4
+    processes = 4
 
 
 def generate_data(n_samples, dataset, noise):
@@ -328,7 +327,7 @@ def update_svm_graph(kernel,
                      threshold,
                      sample_size):
     t_start = time.time()
-    h = .02  # step size in the mesh
+    h = .3  # step size in the mesh
 
     # Data Pre-processing
     X, y = generate_data(n_samples=sample_size, dataset=dataset, noise=noise)
@@ -336,8 +335,10 @@ def update_svm_graph(kernel,
     X_train, X_test, y_train, y_test = \
         train_test_split(X, y, test_size=.4, random_state=42)
 
-    x_min, x_max = X[:, 0].min() - .5, X[:, 0].max() + .5
-    y_min, y_max = X[:, 1].min() - .5, X[:, 1].max() + .5
+    x_min = X[:, 0].min() - .5
+    x_max = X[:, 0].max() + .5
+    y_min = X[:, 1].min() - .5
+    y_max = X[:, 1].max() + .5
     xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
                          np.arange(y_min, y_max, h))
 
@@ -449,4 +450,4 @@ for css in external_css:
 
 # Running the server
 if __name__ == '__main__':
-    app.run_server(debug=True, processes=processes)
+    app.run_server(debug=True)

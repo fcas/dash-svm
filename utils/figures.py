@@ -43,7 +43,7 @@ def serve_prediction_plot(model,
         hoverinfo='none',
         showscale=False,
         contours=dict(
-            showlines=False,
+            showlines=False
         ),
         colorscale=cscale,
         opacity=0.9
