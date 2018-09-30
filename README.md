@@ -1,4 +1,5 @@
-# Support Vector Machine (SVM) Explorer [![GitHub license](https://img.shields.io/github/license/plotly/dash-svm.svg)](https://github.com/plotly/dash-svm/blob/master/LICENSE.md)
+# Support Vector Machine (SVM) Explorer [![GitHub license](https://img.shields.io/github/license/plotly/dash-svm.svg)](https://github.com/plotly/dash-svm/blob/master/LICENSE.md) [![Mentioned in Awesome Machine Learning](https://awesome.re/mentioned-badge.svg)](https://github.com/josephmisiti/awesome-machine-learning)
+
 
 
 This is a demo of the Dash interactive Python framework developed by [Plotly](https://plot.ly/).
