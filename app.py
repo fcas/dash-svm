@@ -27,14 +27,6 @@ from utils.figures import serve_prediction_plot, serve_roc_curve, \
 app = dash.Dash(__name__)
 server = app.server
 
-# Custom Script for Heroku
-if 'DYNO' in os.environ:
-    app.scripts.append_script({
-        'external_url': 'https://cdn.rawgit.com/chriddyp/ca0d8f02a1659981a0ea7f013a378bbd/raw/e79f3f789517deec58f41251f7dbb6bee72c44ab/plotly_ga.js'
-    })
-
-    processes = 4
-
 
 def generate_data(n_samples, dataset, noise):
     if dataset == 'moons':
@@ -438,11 +430,7 @@ external_css = [
     "https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css",
     # Fonts
     "https://fonts.googleapis.com/css?family=Open+Sans|Roboto",
-    "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
-    # Base Stylesheet, replace this with your own base-styles.css using Rawgit
-    "https://rawgit.com/xhlulu/9a6e89f418ee40d02b637a429a876aa9/raw/f3ea10d53e33ece67eb681025cedc83870c9938d/base-styles.css",
-    # Custom Stylesheet, replace this with your own custom-styles.css using Rawgit
-    "https://cdn.rawgit.com/plotly/dash-svm/bb031580/custom-styles.css"
+    "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
 ]
 
 for css in external_css:
