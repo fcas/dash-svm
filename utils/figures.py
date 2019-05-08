@@ -98,7 +98,7 @@ def serve_prediction_plot(model,
             line=dict(
                 width=1
             ),
-        )
+        ),
     )
 
     layout = go.Layout(
@@ -119,6 +119,11 @@ def serve_prediction_plot(model,
         hovermode='closest',
         legend=dict(x=0, y=-0.01, orientation="h"),
         margin=dict(l=0, r=0, t=0, b=0),
+        plot_bgcolor='#282b38',
+        paper_bgcolor='#282b38',
+        font={
+            'color': '##282b38',
+        }
     )
 
     data = [trace0, trace1, trace2, trace3]
@@ -146,13 +151,20 @@ def serve_roc_curve(model,
     layout = go.Layout(
         title=f'ROC Curve (AUC = {auc_score:.3f})',
         xaxis=dict(
-            title='False Positive Rate'
+            title='False Positive Rate',
+            gridcolor='#2f3445',
         ),
         yaxis=dict(
-            title='True Positive Rate'
+            title='True Positive Rate',
+            gridcolor='#2f3445',
         ),
         legend=dict(x=0, y=1.05, orientation="h"),
         margin=dict(l=50, r=10, t=55, b=40),
+        plot_bgcolor='#282b38',
+        paper_bgcolor='#282b38',
+        font={
+            'color': '#a5b1cd',
+        },
     )
 
     data = [trace0]
@@ -199,9 +211,14 @@ def serve_pie_confusion_matrix(model,
         title=f'Confusion Matrix',
         margin=dict(l=10, r=10, t=60, b=10),
         legend=dict(
-            bgcolor='rgba(255,255,255,0)',
+            bgcolor='#282b38',
+            font={
+                'color': '#a5b1cd'
+            },
             orientation='h'
-        )
+        ),
+        plot_bgcolor='#282b38',
+        paper_bgcolor='#282b38',
     )
 
     data = [trace0]
