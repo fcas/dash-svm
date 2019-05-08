@@ -26,11 +26,9 @@ def serve_prediction_plot(model,
                 abs(scaled_threshold - Z.max()))
 
     # Colorscale
-    bright_cscale = [[0, '#FF0000'], [1, '#0000FF']]
-
-    colorscale_zip = zip(np.arange(0, 1.01, 1 / 8),
-                         cl.scales['9']['div']['RdBu'])
-    cscale = list(map(list, colorscale_zip))
+    bright_cscale = [[0, '#ff3700'], [1, '#0b8bff']]
+    cscale = [[0.0000000, 'ff744c'], [0.1428571, '#ff916d'], [0.2857143, '#ffc0a8'], [0.4285714, '#ffe7dc'],
+              [0.5714286, '#e5fcff'], [0.7142857, '#c8feff'], [0.8571429, '#9af8ff'], [1.0000000, '#20e6ff']]
 
     # Create the plot
     # Plot the prediction contour of the SVM
@@ -64,7 +62,7 @@ def serve_prediction_plot(model,
         ),
         name=f'Threshold ({scaled_threshold:.3f})',
         line=dict(
-            color='#222222'
+            color='#708090'
         )
     )
 
@@ -103,8 +101,6 @@ def serve_prediction_plot(model,
 
     layout = go.Layout(
         xaxis=dict(
-            # scaleanchor="y",
-            # scaleratio=1,
             ticks='',
             showticklabels=False,
             showgrid=False,
@@ -118,12 +114,12 @@ def serve_prediction_plot(model,
         ),
         hovermode='closest',
         legend=dict(x=0, y=-0.01, orientation="h"),
-        margin=dict(l=0, r=0, t=0, b=0),
+        margin=dict(l=0, r=0, t=50, b=0),
         plot_bgcolor='#282b38',
         paper_bgcolor='#282b38',
         font={
-            'color': '##282b38',
-        }
+            'color': '#a5b1cd',
+        },
     )
 
     data = [trace0, trace1, trace2, trace3]
@@ -146,6 +142,9 @@ def serve_roc_curve(model,
         y=tpr,
         mode='lines',
         name='Test Data',
+        marker={
+            'color': '#13c6e9',
+        },
     )
 
     layout = go.Layout(
@@ -159,7 +158,7 @@ def serve_roc_curve(model,
             gridcolor='#2f3445',
         ),
         legend=dict(x=0, y=1.05, orientation="h"),
-        margin=dict(l=50, r=10, t=55, b=40),
+        margin=dict(l=100, r=10, t=130, b=40),
         plot_bgcolor='#282b38',
         paper_bgcolor='#282b38',
         font={
@@ -193,7 +192,7 @@ def serve_pie_confusion_matrix(model,
     labels = ["TP", "FN", "FP", "TN"]
     blue = cl.flipper()['seq']['9']['Blues']
     red = cl.flipper()['seq']['9']['Reds']
-    colors = [blue[4], blue[1], red[1], red[4]]
+    colors = ['#13c6e9', blue[1], '#ff916d', '#ff744c']
 
     trace0 = go.Pie(
         labels=label_text,
@@ -204,12 +203,15 @@ def serve_pie_confusion_matrix(model,
         sort=False,
         marker=dict(
             colors=colors
-        )
+        ),
+        insidetextfont={
+            'color': 'black',
+        }
     )
 
     layout = go.Layout(
-        title=f'Confusion Matrix',
-        margin=dict(l=10, r=10, t=60, b=10),
+        title='',
+        margin=dict(l=50, r=10, t=75, b=10),
         legend=dict(
             bgcolor='#282b38',
             font={
@@ -219,6 +221,12 @@ def serve_pie_confusion_matrix(model,
         ),
         plot_bgcolor='#282b38',
         paper_bgcolor='#282b38',
+        font={
+            'color': '#a5b1cd',
+        },
+        autosize=False,
+        width=400,
+        height=400,
     )
 
     data = [trace0]

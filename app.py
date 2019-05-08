@@ -82,7 +82,8 @@ app.layout = html.Div(children=[
             )),
 
             html.A(
-                html.Img(src="https://s3-us-west-1.amazonaws.com/plotly-tutorials/logo/new-branding/dash-logo-by-plotly-stripe-inverted.png"),
+                html.Img(
+                    src="https://s3-us-west-1.amazonaws.com/plotly-tutorials/logo/new-branding/dash-logo-by-plotly-stripe-inverted.png"),
                 href='https://plot.ly/products/dash/'
             )
         ]),
@@ -94,7 +95,6 @@ app.layout = html.Div(children=[
                 className='three columns',
                 style={
                     'min-width': '24.5%',
-                    'max-height': 'calc(100vh - 85px)',
                     'overflow-y': 'auto',
                     'overflow-x': 'hidden',
                 },
@@ -120,7 +120,7 @@ app.layout = html.Div(children=[
                             min=100,
                             max=500,
                             step=100,
-                            marks={i: i for i in [100, 200, 300, 400, 500]},
+                            marks={str(i): str(i) for i in [100, 200, 300, 400, 500]},
                             value=300
                         ),
 
@@ -152,82 +152,89 @@ app.layout = html.Div(children=[
                         ),
                     ]),
 
-                    drc.Card([
-                        drc.NamedDropdown(
-                            name='Kernel',
-                            id='dropdown-svm-parameter-kernel',
-                            options=[
-                                {'label': 'Radial basis function (RBF)',
-                                 'value': 'rbf'},
-                                {'label': 'Linear', 'value': 'linear'},
-                                {'label': 'Polynomial', 'value': 'poly'},
-                                {'label': 'Sigmoid', 'value': 'sigmoid'}
-                            ],
-                            value='rbf',
-                            clearable=False,
-                            searchable=False
-                        ),
+                    drc.Card(
+                        id='last-card',
+                        children=[
+                            drc.NamedDropdown(
+                                name='Kernel',
+                                id='dropdown-svm-parameter-kernel',
+                                options=[
+                                    {'label': 'Radial basis function (RBF)',
+                                     'value': 'rbf'},
+                                    {'label': 'Linear', 'value': 'linear'},
+                                    {'label': 'Polynomial', 'value': 'poly'},
+                                    {'label': 'Sigmoid', 'value': 'sigmoid'}
+                                ],
+                                value='rbf',
+                                clearable=False,
+                                searchable=False
+                            ),
 
-                        drc.NamedSlider(
-                            name='Cost (C)',
-                            id='slider-svm-parameter-C-power',
-                            min=-2,
-                            max=4,
-                            value=0,
-                            marks={i: '{}'.format(10 ** i) for i in
-                                   range(-2, 5)}
-                        ),
+                            drc.NamedSlider(
+                                name='Cost (C)',
+                                id='slider-svm-parameter-C-power',
+                                min=-2,
+                                max=4,
+                                value=0,
+                                marks={i: '{}'.format(10 ** i) for i in
+                                       range(-2, 5)}
+                            ),
 
-                        drc.FormattedSlider(
-                            style={'padding': '5px 10px 25px'},
-                            id='slider-svm-parameter-C-coef',
-                            min=1,
-                            max=9,
-                            value=1
-                        ),
+                            drc.FormattedSlider(
+                                style={'padding': '5px 10px 25px'},
+                                id='slider-svm-parameter-C-coef',
+                                min=1,
+                                max=9,
+                                value=1
+                            ),
 
-                        drc.NamedSlider(
-                            name='Degree',
-                            id='slider-svm-parameter-degree',
-                            min=2,
-                            max=10,
-                            value=3,
-                            step=1,
-                            marks={i: i for i in range(2, 11, 2)},
-                        ),
+                            drc.NamedSlider(
+                                name='Degree',
+                                id='slider-svm-parameter-degree',
+                                min=2,
+                                max=10,
+                                value=3,
+                                step=1,
+                                marks={str(i): str(i) for i in range(2, 11, 2)},
+                            ),
 
-                        drc.NamedSlider(
-                            name='Gamma',
-                            id='slider-svm-parameter-gamma-power',
-                            min=-5,
-                            max=0,
-                            value=-1,
-                            marks={i: '{}'.format(10 ** i) for i in
-                                   range(-5, 1)}
-                        ),
+                            drc.NamedSlider(
+                                name='Gamma',
+                                id='slider-svm-parameter-gamma-power',
+                                min=-5,
+                                max=0,
+                                value=-1,
+                                marks={i: '{}'.format(10 ** i) for i in
+                                       range(-5, 1)}
+                            ),
 
-                        drc.FormattedSlider(
-                            style={'padding': '5px 10px 25px'},
-                            id='slider-svm-parameter-gamma-coef',
-                            min=1,
-                            max=9,
-                            value=5
-                        ),
+                            drc.FormattedSlider(
+                                style={'padding': '5px 10px 25px'},
+                                id='slider-svm-parameter-gamma-coef',
+                                min=1,
+                                max=9,
+                                value=5
+                            ),
 
-                        drc.NamedRadioItems(
-                            name='Shrinking',
-                            id='radio-svm-parameter-shrinking',
-                            labelStyle={
-                                'margin-right': '7px',
-                                'display': 'inline-block'
-                            },
-                            options=[
-                                {'label': ' Enabled', 'value': True},
-                                {'label': ' Disabled', 'value': False},
-                            ],
-                            value=True,
-                        ),
-                    ]),
+                            html.Div(
+                                style={'padding': '20px 10px 25px 4px'},
+                                children=[
+                                    html.P(children='Shrinking'),
+                                    dcc.RadioItems(
+                                        id='radio-svm-parameter-shrinking',
+                                        labelStyle={
+                                            'margin-right': '7px',
+                                            'display': 'inline-block'
+                                        },
+                                        options=[
+                                            {'label': ' Enabled', 'value': 'True'},
+                                            {'label': ' Disabled', 'value': 'False'},
+                                        ],
+                                        value='True',
+                                    ),
+                                ]
+                            )
+                        ]),
                 ]
             ),
             html.Div(
@@ -329,13 +336,18 @@ def update_svm_graph(kernel,
     C = C_coef * 10 ** C_power
     gamma = gamma_coef * 10 ** gamma_power
 
+    if shrinking == 'True':
+        flag = True
+    else:
+        flag = False
+
     # Train SVM
     clf = SVC(
         C=C,
         kernel=kernel,
         degree=degree,
         gamma=gamma,
-        shrinking=shrinking
+        shrinking=flag
     )
     clf.fit(X_train, y_train)
 
@@ -407,7 +419,8 @@ def update_svm_graph(kernel,
                     style={'height': '40%'},
                     figure=roc_figure
                 ),
-
+                html.P(className='graph-title',
+                       children='Confusion Matrix'),
                 dcc.Graph(
                     id='graph-pie-confusion-matrix',
                     figure=confusion_figure,

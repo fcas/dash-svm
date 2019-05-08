@@ -16,11 +16,11 @@ def _omit(omitted_keys, d):
 # Custom Display Components
 def Card(children, **kwargs):
     return html.Section(
-        children,
+        className='card',
+        children=children,
         style=_merge({
             'padding': 20,
             'margin': 5,
-
             # Remove possibility to select the text for better UX
             'user-select': 'none',
             '-moz-user-select': 'none',
