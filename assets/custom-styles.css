@@ -7,28 +7,32 @@
 
 /* Banner
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
+@import url('https://fonts.googleapis.com/css?family=Playfair+Display');
+
 .banner {
     height: 75px;
-    background-color: #fc8600; /* Machine Learning Color is orange */
-    padding-top: 0px;
-    padding-left: 0px;
-    padding-right: 0px;
+    background-color: #2f3445; /* Machine Learning Color is orange */
+    padding: 3rem 0;
     width: 100%;
     margin-bottom: 10px;
 }
 
 .banner h2 {
-    color: white;
+    color: #a5b1cd;
     display: inline-block;
-    font-family: 'Open Sans', sans-serif;
-    font-size:4rem;
+    font-family: 'Playfair Display', sans-serif;
+    font-size: 4rem;
     line-height:1;
+}
+
+.banner h2:hover{
+    color: #b4b5bf;
 }
 
 .banner Img {
     position: relative;
     float: right;
-    height: 75px;
+    height: 8rem;
 }
 
 /* Scalable Container

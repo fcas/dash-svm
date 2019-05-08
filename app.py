@@ -91,14 +91,6 @@ app.layout = html.Div(children=[
     html.Div(id='body', className='container scalable', children=[
         html.Div(className='row', children=[
             html.Div(
-                id='div-graphs',
-                children=dcc.Graph(
-                    id='graph-sklearn-svm',
-                    style={'display': 'none'}
-                )
-            ),
-
-            html.Div(
                 className='three columns',
                 style={
                     'min-width': '24.5%',
@@ -236,14 +228,14 @@ app.layout = html.Div(children=[
                             value=True,
                         ),
                     ]),
-
-                    html.Div(
-                        dcc.Markdown(dedent("""
-                        [Click here](https://github.com/plotly/dash-svm) to visit the project repo, and learn about how to use the app.
-                        """)),
-                        style={'margin': '20px 0px', 'text-align': 'center'}
-                    ),
                 ]
+            ),
+            html.Div(
+                id='div-graphs',
+                children=dcc.Graph(
+                    id='graph-sklearn-svm',
+                    style={'display': 'none'}
+                )
             ),
         ]),
     ])
@@ -386,6 +378,17 @@ def update_svm_graph(kernel,
 
     return [
         html.Div(
+            className='six columns',
+            style={'margin-top': '5px'},
+            children=[
+                dcc.Graph(
+                    id='graph-sklearn-svm',
+                    figure=prediction_figure,
+                    style={'height': 'calc(100vh - 90px)'}
+                )
+            ]
+        ),
+        html.Div(
             className='three columns',
             style={
                 'min-width': '24.5%',
@@ -410,18 +413,8 @@ def update_svm_graph(kernel,
                     figure=confusion_figure,
                     style={'height': '60%'}
                 )
-            ]),
-
-        html.Div(
-            className='six columns',
-            style={'margin-top': '5px'},
-            children=[
-                dcc.Graph(
-                    id='graph-sklearn-svm',
-                    figure=prediction_figure,
-                    style={'height': 'calc(100vh - 90px)'}
-                )
-            ])
+            ]
+        ),
     ]
 
 
