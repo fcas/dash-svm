@@ -14,7 +14,7 @@
     background-color: #2f3445; /* Machine Learning Color is orange */
     padding: 3rem 0;
     width: 100%;
-    margin-bottom: 6% !important;
+    margin-bottom: 3% !important;
 }
 
 .banner h2 {
@@ -22,10 +22,10 @@
     display: inline-block;
     font-family: 'Playfair Display', sans-serif;
     font-size: 4rem;
-    line-height:1;
+    line-height: 1;
 }
 
-.banner h2:hover{
+.banner h2:hover {
     color: #b4b5bf;
 }
 
@@ -44,62 +44,69 @@
 
 /* Dropdowns
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
-.Select-control{
+
+.Select-control {
     color: #a5b1cd;
 }
 
-.Select{
+.Select {
     color: #a5b1cd;
 }
 
-.Select-menu-outer{
+.Select-menu-outer {
     background-color: #2f3445;
     border: 1px solid gray;
 }
 
-.Select div{
+.Select div {
     background-color: #2f3445;
 }
 
-.Select-menu-outer div:hover{
+.Select-menu-outer div:hover {
     background-color: rgba(255, 255, 255, 0.01);
 }
 
-.Select-value-label{
+.Select-value-label {
     color: #a5b1cd !important;
 }
 
-.Select--single>.Select-control .Select-value, .Select-placeholder{
-  border: 1px solid gray;
-  border-radius: 4px;
+.Select--single > .Select-control .Select-value, .Select-placeholder {
+    border: 1px solid gray;
+    border-radius: 4px;
 }
 
-.card{
+.card {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     width: 75%;
 }
 
-#last-card{
+#last-card {
     border-bottom: none;
 }
 
-.graph-title{
+.graph-title {
     font-size: 2rem;
-    /*text-align: center;*/
-    margin: 15% 0 0 15%;
+    margin: 15% 0 0 25%;
+}
+
+#button-zero-threshold {
+    background-color: #2f3445;
+    color: #a5b1cd;
+    border-color: gray;
+    margin-left: 20%;
 }
 
 /* Slider
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
-.rc-slider-track{
+.rc-slider-track {
     background-color: #13c6e9 !important;
 }
 
-.rc-slider-handle{
+.rc-slider-handle {
     border: solid 2px #13c6e9 !important
 }
 
-input[type='radio']:checked{
+input[type='radio']:checked {
     background-color: #13c6e9 !important;
     border-color: #13c6e9 !important;
 }
@@ -107,5 +114,5 @@ input[type='radio']:checked{
 /* Remove Undo
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 ._dash-undo-redo {
-  display: none;
+    display: none;
 }

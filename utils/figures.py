@@ -210,14 +210,13 @@ def serve_pie_confusion_matrix(model,
     )
 
     layout = go.Layout(
-        title='',
         margin=dict(l=50, r=10, t=75, b=10),
         legend=dict(
             bgcolor='#282b38',
             font={
                 'color': '#a5b1cd'
             },
-            orientation='h'
+            orientation='v'
         ),
         plot_bgcolor='#282b38',
         paper_bgcolor='#282b38',

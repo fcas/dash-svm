@@ -93,6 +93,7 @@ app.layout = html.Div(children=[
         html.Div(className='row', children=[
             html.Div(
                 className='three columns',
+                id='left-column',
                 style={
                     'min-width': '24.5%',
                     'overflow-y': 'auto',
