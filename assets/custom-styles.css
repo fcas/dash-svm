@@ -14,7 +14,9 @@
     background-color: #2f3445; /* Machine Learning Color is orange */
     padding: 3rem 0;
     width: 100%;
-    margin-bottom: 3% !important;
+    margin-bottom: 6% !important;
+    display: block;
+    overflow: auto;
 }
 
 .banner h2 {
@@ -38,7 +40,7 @@
 /* Scalable Container
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .container.scalable {
-    width: 90%;
+    width: 95%;
     max-width: none;
 }
 
@@ -95,6 +97,15 @@
     border-color: gray;
     margin-left: 20%;
 }
+
+#first-card {
+    padding-top: 0 !important;
+}
+
+#left-column{
+    margin: 0 3% 0 0 !important;
+}
+
 
 /* Slider
 –––––––––––––––––––––––––––––––––––––––––––––––––– */

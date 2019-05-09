@@ -95,12 +95,15 @@ app.layout = html.Div(children=[
                 className='three columns',
                 id='left-column',
                 style={
-                    'min-width': '24.5%',
+                    'max-height': '90vh',
+                    'max-width': '20%',
                     'overflow-y': 'auto',
                     'overflow-x': 'hidden',
                 },
                 children=[
-                    drc.Card([
+                    drc.Card(
+                        id='first-card',
+                        children=[
                         drc.NamedDropdown(
                             name='Select Dataset',
                             id='dropdown-select-dataset',
@@ -420,8 +423,6 @@ def update_svm_graph(kernel,
                     style={'height': '40%'},
                     figure=roc_figure
                 ),
-                html.P(className='graph-title',
-                       children='Confusion Matrix'),
                 dcc.Graph(
                     id='graph-pie-confusion-matrix',
                     figure=confusion_figure,

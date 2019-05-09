@@ -76,9 +76,6 @@ def serve_prediction_plot(model,
             size=10,
             color=y_train,
             colorscale=bright_cscale,
-            line=dict(
-                width=1
-            )
         )
     )
 
@@ -93,9 +90,6 @@ def serve_prediction_plot(model,
             symbol='triangle-up',
             color=y_test,
             colorscale=bright_cscale,
-            line=dict(
-                width=1
-            ),
         ),
     )
 
@@ -114,7 +108,7 @@ def serve_prediction_plot(model,
         ),
         hovermode='closest',
         legend=dict(x=0, y=-0.01, orientation="h"),
-        margin=dict(l=0, r=0, t=50, b=0),
+        margin=dict(l=0, r=0, t=0, b=0),
         plot_bgcolor='#282b38',
         paper_bgcolor='#282b38',
         font={
@@ -158,7 +152,7 @@ def serve_roc_curve(model,
             gridcolor='#2f3445',
         ),
         legend=dict(x=0, y=1.05, orientation="h"),
-        margin=dict(l=100, r=10, t=130, b=40),
+        margin=dict(l=100, r=10, t=25, b=40),
         plot_bgcolor='#282b38',
         paper_bgcolor='#282b38',
         font={
@@ -206,26 +200,25 @@ def serve_pie_confusion_matrix(model,
         ),
         insidetextfont={
             'color': 'black',
-        }
+        },
+        rotation=90,
     )
 
     layout = go.Layout(
-        margin=dict(l=50, r=10, t=75, b=10),
+        title='Confusion Matrix',
+        margin=dict(l=50, r=10, t=100, b=10),
         legend=dict(
             bgcolor='#282b38',
             font={
                 'color': '#a5b1cd'
             },
-            orientation='v'
+            orientation='h'
         ),
         plot_bgcolor='#282b38',
         paper_bgcolor='#282b38',
         font={
             'color': '#a5b1cd',
         },
-        autosize=False,
-        width=400,
-        height=400,
     )
 
     data = [trace0]
