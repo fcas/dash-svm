@@ -42,6 +42,7 @@
 .container.scalable {
     width: 95%;
     max-width: none;
+    margin-bottom: 5%;
 }
 
 /* Dropdowns
