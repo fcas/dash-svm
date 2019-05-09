@@ -104,57 +104,59 @@ app.layout = html.Div(children=[
                     drc.Card(
                         id='first-card',
                         children=[
-                        drc.NamedDropdown(
-                            name='Select Dataset',
-                            id='dropdown-select-dataset',
-                            options=[
-                                {'label': 'Moons', 'value': 'moons'},
-                                {'label': 'Linearly Separable',
-                                 'value': 'linear'},
-                                {'label': 'Circles', 'value': 'circles'}
-                            ],
-                            clearable=False,
-                            searchable=False,
-                            value='moons'
-                        ),
+                            drc.NamedDropdown(
+                                name='Select Dataset',
+                                id='dropdown-select-dataset',
+                                options=[
+                                    {'label': 'Moons', 'value': 'moons'},
+                                    {'label': 'Linearly Separable',
+                                     'value': 'linear'},
+                                    {'label': 'Circles', 'value': 'circles'}
+                                ],
+                                clearable=False,
+                                searchable=False,
+                                value='moons'
+                            ),
 
-                        drc.NamedSlider(
-                            name='Sample Size',
-                            id='slider-dataset-sample-size',
-                            min=100,
-                            max=500,
-                            step=100,
-                            marks={str(i): str(i) for i in [100, 200, 300, 400, 500]},
-                            value=300
-                        ),
+                            drc.NamedSlider(
+                                name='Sample Size',
+                                id='slider-dataset-sample-size',
+                                min=100,
+                                max=500,
+                                step=100,
+                                marks={str(i): str(i) for i in [100, 200, 300, 400, 500]},
+                                value=300
+                            ),
 
-                        drc.NamedSlider(
-                            name='Noise Level',
-                            id='slider-dataset-noise-level',
-                            min=0,
-                            max=1,
-                            marks={i / 10: str(i / 10) for i in
-                                   range(0, 11, 2)},
-                            step=0.1,
-                            value=0.2,
-                        ),
-                    ]),
+                            drc.NamedSlider(
+                                name='Noise Level',
+                                id='slider-dataset-noise-level',
+                                min=0,
+                                max=1,
+                                marks={i / 10: str(i / 10) for i in
+                                       range(0, 11, 2)},
+                                step=0.1,
+                                value=0.2,
+                            ),
+                        ]),
 
-                    drc.Card([
-                        drc.NamedSlider(
-                            name='Threshold',
-                            id='slider-threshold',
-                            min=0,
-                            max=1,
-                            value=0.5,
-                            step=0.01
-                        ),
+                    drc.Card(
+                        id='button-card',
+                        children=[
+                            drc.NamedSlider(
+                                name='Threshold',
+                                id='slider-threshold',
+                                min=0,
+                                max=1,
+                                value=0.5,
+                                step=0.01
+                            ),
 
-                        html.Button(
-                            'Reset Threshold',
-                            id='button-zero-threshold'
-                        ),
-                    ]),
+                            html.Button(
+                                'Reset Threshold',
+                                id='button-zero-threshold'
+                            ),
+                        ]),
 
                     drc.Card(
                         id='last-card',

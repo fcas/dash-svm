@@ -96,7 +96,11 @@
     background-color: #2f3445;
     color: #a5b1cd;
     border-color: gray;
-    margin-left: 20%;
+}
+
+#button-card{
+    display: flex;
+    flex-direction: column;
 }
 
 #first-card {
