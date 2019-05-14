@@ -16,7 +16,7 @@
     width: 100%;
     margin-bottom: 6% !important;
     display: block;
-    overflow: auto;
+    overflow: hidden;
 }
 
 .banner h2 {
