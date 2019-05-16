@@ -98,7 +98,7 @@
     border-color: gray;
 }
 
-#button-card{
+#button-card {
     display: flex;
     flex-direction: column;
 }
@@ -107,7 +107,7 @@
     padding-top: 0 !important;
 }
 
-#left-column{
+#left-column {
     margin: 0 3% 0 0 !important;
 }
 
